@@ -26,7 +26,7 @@
 @property (nonatomic,readonly) NSError* error;
 
 @property(nonatomic, readonly) NSURL *connectionURL;
-@property(nonatomic, retain) NSString *filePath;
+@property(nonatomic, strong) NSString *filePath;
 
 -(id)initWithUrl:(NSURL *)aUrl saveToFilePath:(NSString *)aFilePath;
 

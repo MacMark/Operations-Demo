@@ -22,19 +22,13 @@
         connectionURL_ = [url copy];
         YAJLDocument* document = [[YAJLDocument alloc] init];
         self.document_ = document;
-        [document release];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    if( connection_ ) { [connection_ cancel]; [connection_ release]; connection_ = nil; }
-    [connectionURL_ release];
-    [error_ release];
-    [document_ release];
-    document_ = nil;
-    [super dealloc];
+    if( connection_ ) { [connection_ cancel];  connection_ = nil; }
 }
 
 #pragma mark -
@@ -47,7 +41,6 @@
     
     if( connection_ ) {
         [connection_ cancel];
-        [connection_ release];
         connection_ = nil;
     }
     
@@ -125,7 +118,7 @@
 		return;
     }
 	else {
-		error_ = [error retain];
+		error_ = error;
 		[self done];
 	}
 }

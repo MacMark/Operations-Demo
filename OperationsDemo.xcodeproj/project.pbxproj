@@ -22,6 +22,7 @@
 		917381E6139D7D3600E99448 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 917381E4139D7D3600E99448 /* MainWindow.xib */; };
 		917381E9139D7D3600E99448 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 917381E8139D7D3600E99448 /* RootViewController.m */; };
 		917381EC139D7D3600E99448 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 917381EA139D7D3600E99448 /* RootViewController.xib */; };
+		A25E57011931F24900F40AFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E57001931F24900F40AFD /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		917381E7139D7D3600E99448 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		917381E8139D7D3600E99448 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		917381EB139D7D3600E99448 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
+		A25E57001931F24900F40AFD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		917381C3139D7D3600E99448 = {
 			isa = PBXGroup;
 			children = (
+				A25E57001931F24900F40AFD /* Default-568h@2x.png */,
 				917381D8139D7D3600E99448 /* OperationsDemo */,
 				917381D1139D7D3600E99448 /* Frameworks */,
 				917381CF139D7D3600E99448 /* Products */,
@@ -186,6 +189,7 @@
 		917381C5139D7D3600E99448 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Pulse News";
 			};
 			buildConfigurationList = 917381C8139D7D3600E99448 /* Build configuration list for PBXProject "OperationsDemo" */;
@@ -213,6 +217,7 @@
 				917381DD139D7D3600E99448 /* InfoPlist.strings in Resources */,
 				917381E6139D7D3600E99448 /* MainWindow.xib in Resources */,
 				917381EC139D7D3600E99448 /* RootViewController.xib in Resources */,
+				A25E57011931F24900F40AFD /* Default-568h@2x.png in Resources */,
 				911EC138139D7F58006CA713 /* DisplayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,7 +272,6 @@
 		917381ED139D7D3600E99448 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -277,6 +281,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -284,7 +289,6 @@
 		917381EE139D7D3600E99448 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -300,11 +304,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OperationsDemo/OperationsDemo-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "OperationsDemo/OperationsDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -318,10 +325,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OperationsDemo/OperationsDemo-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "OperationsDemo/OperationsDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",

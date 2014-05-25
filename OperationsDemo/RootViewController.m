@@ -21,10 +21,9 @@
 
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = cancelButton;
-    [cancelButton release];
      
     
-    websites = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
+    websites = [NSMutableDictionary dictionaryWithCapacity:5];
     [websites setValue:@"http://google.com" forKey:@"Google"];
     [websites setValue:@"http://wikipedia.org" forKey:@"Wikipedia"];
     [websites setValue:@"http://pulse.me" forKey:@"Pulse.me"];
@@ -33,7 +32,7 @@
 
     self.title = @"Operations Demo";
     
-    websiteData = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
+    websiteData = [NSMutableDictionary dictionaryWithCapacity:5];
 
     // Create operation queue
     operationQueue = [NSOperationQueue new];
@@ -47,7 +46,6 @@
         DownloadUrlOperation *operation = [[DownloadUrlOperation alloc] initWithURL:[NSURL URLWithString:urlAsString]];
         [operation addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:NULL];
         [operationQueue addOperation:operation]; // operation starts as soon as its added
-        [operation release];
     }
     
     // To mix things up, we will download the last url directly to disk
@@ -118,7 +116,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
     // Configure the cell.
@@ -141,7 +139,6 @@
         vc.data = [websiteData objectForKey:key];
     }
     [self.navigationController pushViewController:vc animated:YES];
-    [vc release];
 }
 
 - (void)didReceiveMemoryWarning
@@ -165,17 +162,13 @@
     if (downloadToDiskOperation) {
         [downloadToDiskOperation removeObserver:self forKeyPath:@"isFinished"];
         [downloadToDiskOperation cancel];
-        [downloadToDiskOperation release];
         downloadToDiskOperation = nil;
     }
     if (downloadJSONOperation) {
         [downloadJSONOperation removeObserver:self forKeyPath:@"isFinished"];
         [downloadJSONOperation cancel];
-        [downloadJSONOperation release];
         downloadJSONOperation = nil;
     }
-    [websites release];
-    [super dealloc];
 }
 
 #pragma mark -
@@ -183,12 +176,10 @@
 - (void)cancel:(id)sender {
     if (downloadToDiskOperation) {
         [downloadToDiskOperation removeObserver:self forKeyPath:@"isFinished"];
-        [downloadToDiskOperation release];
         downloadToDiskOperation = nil;
     }
     if (downloadJSONOperation) {
         [downloadJSONOperation removeObserver:self forKeyPath:@"isFinished"];
-        [downloadJSONOperation release];
         downloadJSONOperation = nil;
     }
     [operationQueue cancelAllOperations];
@@ -225,7 +216,6 @@
             data = [NSData dataWithContentsOfFile:downloadOperation.filePath];
             error = [downloadOperation error];
         }
-        [downloadToDiskOperation release];
         downloadToDiskOperation = nil;
 
     }
@@ -241,7 +231,6 @@
             data =   [[downloadOperation.document.root description] dataUsingEncoding:NSASCIIStringEncoding];
             error = [downloadOperation error];
         }
-        [downloadJSONOperation release];
         downloadJSONOperation = nil;
         
     }

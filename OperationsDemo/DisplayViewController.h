@@ -18,9 +18,9 @@
     NSString *sourceTitle;
 }
 
-@property(nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property(nonatomic, retain) IBOutlet UITextView *textView;
-@property(nonatomic, retain) NSData *data;
-@property(nonatomic, retain) NSString *sourceTitle;
+@property(nonatomic, strong) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property(nonatomic, strong) IBOutlet UITextView *textView;
+@property(nonatomic, strong) NSData *data;
+@property(nonatomic, strong) NSString *sourceTitle;
 
 @end

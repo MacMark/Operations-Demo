@@ -16,23 +16,15 @@
 {
 	if( connection_ ) { 
         [connection_ cancel]; 
-        [connection_ release]; 
         connection_ = nil;
         
         [stream close];
-		[stream release];
 		stream = nil;
     }
     
-	[connectionURL_ release];
-    connectionURL_ = nil;
     
-	[error_ release];
-	error_ = nil;
 	
-    self.filePath = nil;
     
-    [super dealloc];
 }
 
 
@@ -55,11 +47,9 @@
 {
     if( connection_ ) {
 		[connection_ cancel];
-        [connection_ release];
         connection_ = nil;
 
 		[stream close];
-		[stream release];
 		stream = nil;
 		
     }
@@ -135,7 +125,7 @@
 		return;
     }
 	else {
-		error_ = [error retain];
+		error_ = error;
 		[self done];
 	}
 }

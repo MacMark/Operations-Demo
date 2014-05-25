@@ -34,7 +34,6 @@
         [loadingIndicator stopAnimating];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Failed" message:@"Please check internet connection and try again" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     }
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,12 +47,7 @@
 
 - (void)dealloc
 {
-    self.textView = nil;
-    self.loadingIndicator = nil;
-    self.data = nil;
-    self.sourceTitle = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning

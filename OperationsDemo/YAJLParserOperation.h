@@ -27,7 +27,7 @@
 @property (nonatomic,readonly, getter = error) NSError* error_;
 @property (nonatomic, readonly) NSURL *connectionURL;
 
-@property (nonatomic,retain, getter = document) YAJLDocument* document_;
+@property (nonatomic,strong, getter = document) YAJLDocument* document_;
 
 - (id)initWithURL:(NSURL*)url;
 @end

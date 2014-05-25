@@ -18,26 +18,19 @@
 - (id)initWithURL:(NSURL *)url
 {
     if( (self = [super init]) ) {
-        connectionURL_ = [url copy];
+        self.connectionURL = [url copy];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    if( connection_ ) {
-        [connection_ cancel]; [connection_ release]; connection_ = nil;
+    if( self.sessionTask ) {
+        [self.sessionTask cancel];
     }
-    [connectionURL_ release];
-    connectionURL_ = nil;
     
-    [data_ release];
-    data_ = nil;
     
-    [error_ release];
-    error_ = nil;
     
-    [super dealloc];
 }
 
 #pragma mark -
@@ -45,54 +38,51 @@
 
 // This method is just for convenience. It cancels the URL connection if it
 // still exists and finishes up the operation.
-- (void)done
-{
-    if( connection_ ) {
-        [connection_ cancel];
-        [connection_ release];
-        connection_ = nil;
+- (void)done {
+    if (self.sessionTask) {
+        [self.sessionTask cancel];
+        self.sessionTask = nil;
     }
-
+    
     // Alert anyone that we are finished
     [self willChangeValueForKey:@"isExecuting"];
     [self willChangeValueForKey:@"isFinished"];
-    executing_ = NO;
-    finished_  = YES;
+    self.executing = NO;
+    self.finished  = YES;
     [self didChangeValueForKey:@"isFinished"];
     [self didChangeValueForKey:@"isExecuting"];
 }
 -(void)canceled {
 	// Code for being cancelled
-    error_ = [[NSError alloc] initWithDomain:@"DownloadUrlOperation"
-                                        code:123
-                                    userInfo:nil];
+    self.error = [[NSError alloc] initWithDomain:@"DownloadUrlOperation"
+                                            code:123
+                                        userInfo:nil];
 	
     [self done];
 	
 }
 - (void)start
 {
-    // Ensure that this operation starts on the main thread
-    if (![NSThread isMainThread])
-    {
-        [self performSelectorOnMainThread:@selector(start)
-                               withObject:nil waitUntilDone:NO];
-        return;
-    }
-    
     // Ensure that the operation should exute
-    if( finished_ || [self isCancelled] ) { [self done]; return; }
+    if( self.finished || [self isCancelled] ) { [self done]; return; }
     
     // From this point on, the operation is officially executing--remember, isExecuting
     // needs to be KVO compliant!
     [self willChangeValueForKey:@"isExecuting"];
-    executing_ = YES;
+    self.executing = YES;
     [self didChangeValueForKey:@"isExecuting"];
+
+    self.data = [NSMutableData data];
     
-    // Create the NSURLConnection--this could have been done in init, but we delayed
+    // Create the session -- this could have been done in init, but we delayed
     // until no in case the operation was never enqueued or was cancelled before starting
-    connection_ = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:connectionURL_ cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0]
-                                                  delegate:self];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+                                                         delegate:self
+                                                    delegateQueue:[NSOperationQueue mainQueue]];
+
+    NSURLSessionDataTask *sessionTask = [session dataTaskWithRequest:[NSURLRequest requestWithURL:connectionURL_ cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0]];
+    [sessionTask resume];
+
 }
 
 #pragma mark -
@@ -105,19 +95,28 @@
 
 - (BOOL)isExecuting
 {
-    return executing_;
+    return self.executing;
 }
 
 - (BOOL)isFinished
 {
-    return finished_;
+    return self.finished;
 }
 
 #pragma mark -
 #pragma mark Delegate Methods for NSURLConnection
 
-// The connection failed
-- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error) {
+        [self handleErrorCase:error];
+    }
+    else {
+        [self handleSessionSuccess];
+    }
+}
+
+// The session failed
+- (void)handleErrorCase:(NSError*)error
 {
     // Check if the operation has been cancelled
     if([self isCancelled]) {
@@ -125,28 +124,30 @@
 		return;
     }
 	else {
-		[data_ release];
-		data_ = nil;
-		error_ = [error retain];
+		self.data = nil;
+		self.error = error;
 		[self done];
 	}
 }
 
-// The connection received more data
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
+// The session received more data
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data {
     // Check if the operation has been cancelled
     if([self isCancelled]) {
         [self canceled];
 		return;
     }
     
-    [data_ appendData:data];
+    [self.data appendData:data];
 }
 
-// Initial response
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
+// Initial response; you don't need this method really, see Apple's documentation why.
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
+
+    completionHandler(NSURLSessionResponseAllow);
+
     // Check if the operation has been cancelled
     if([self isCancelled]) {
         [self canceled];
@@ -168,8 +169,7 @@
     }
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+- (void)handleSessionSuccess {
     // Check if the operation has been cancelled
     if([self isCancelled]) {
         [self canceled];
