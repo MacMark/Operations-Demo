@@ -104,7 +104,7 @@
 }
 
 #pragma mark -
-#pragma mark Delegate Methods for NSURLConnection
+#pragma mark - NSURLSessionTaskDelegate
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error) {
@@ -114,6 +114,9 @@
         [self handleSessionSuccess];
     }
 }
+
+
+#pragma mark - session failure
 
 // The session failed
 - (void)handleErrorCase:(NSError*)error
@@ -130,6 +133,9 @@
 	}
 }
 
+
+#pragma mark - NSURLSessionDataDelegate
+
 // The session received more data
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
@@ -142,32 +148,7 @@
     [self.data appendData:data];
 }
 
-// Initial response; you don't need this method really, see Apple's documentation why.
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response
- completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
-
-    completionHandler(NSURLSessionResponseAllow);
-
-    // Check if the operation has been cancelled
-    if([self isCancelled]) {
-        [self canceled];
-		return;
-    }
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    NSInteger statusCode = [httpResponse statusCode];
-    if( statusCode == 200 ) {
-        NSUInteger contentSize = [httpResponse expectedContentLength] > 0 ? [httpResponse expectedContentLength] : 0;
-        data_ = [[NSMutableData alloc] initWithCapacity:contentSize];
-    } else {
-        NSString* statusError  = [NSString stringWithFormat:NSLocalizedString(@"HTTP Error: %ld", nil), statusCode];
-        NSDictionary* userInfo = [NSDictionary dictionaryWithObject:statusError forKey:NSLocalizedDescriptionKey];
-        error_ = [[NSError alloc] initWithDomain:@"DownloadUrlOperation"
-                                            code:statusCode
-                                        userInfo:userInfo];
-        [self done];
-    }
-}
+#pragma mark - session success
 
 - (void)handleSessionSuccess {
     // Check if the operation has been cancelled
@@ -178,11 +159,6 @@
 	else {
 		[self done];
 	}
-}
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse *)cachedResponse {
-    return nil;
 }
 
 @end
