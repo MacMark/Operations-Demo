@@ -14,8 +14,8 @@
 }
 
 
-@property (nonatomic, assign) BOOL executing;
-@property (nonatomic, assign) BOOL finished;
+@property (atomic, assign, getter=isExecuting) BOOL executing;
+@property (atomic, assign, getter=isFinished) BOOL finished;
 
 @property (nonatomic, strong) NSError* error;
 @property (nonatomic, strong) NSMutableData *data;

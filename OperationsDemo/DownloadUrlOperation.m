@@ -10,6 +10,9 @@
 
 @implementation DownloadUrlOperation
 
+@synthesize finished = _finished;
+@synthesize executing = _executing;
+
 @synthesize error = error_, data = data_;
 @synthesize connectionURL = connectionURL_;
 #pragma mark -
@@ -85,23 +88,6 @@
 
 }
 
-#pragma mark -
-#pragma mark Overrides
-
-- (BOOL)isConcurrent
-{
-    return YES;
-}
-
-- (BOOL)isExecuting
-{
-    return self.executing;
-}
-
-- (BOOL)isFinished
-{
-    return self.finished;
-}
 
 #pragma mark -
 #pragma mark - NSURLSessionTaskDelegate
